@@ -1,7 +1,8 @@
 import { useReducer, useState } from "react";
 import "./App.css";
 import { initialTasks } from "./data/tasks";
-import { FiDelete, FiEdit } from "react-icons/fi";
+
+import DisplayField from "./components/displayField";
 
 const types = {
   EDIT: "EDIT",
@@ -72,51 +73,7 @@ function App() {
         }}
       >
         {state.map((task) => (
-          <li
-            key={task.id}
-            style={{
-              display: "flex",
-              background: task.id % 2 == 0 ? "#f2f2f2" : "none",
-            }}
-          >
-            <input
-              type="checkbox"
-              name={task.title}
-              id={task.id}
-              checked={task.completed}
-              onChange={() =>
-                todoDispatch({
-                  type: types.TOGGLE_COMPLETE,
-                  payload: task.id,
-                })
-              }
-            />
-            <label
-              for={task.id}
-              style={{
-                textDecoration: task.completed ? "line-through" : "none",
-              }}
-            >
-              {task.title}
-            </label>
-
-            <button
-              style={{ marginLeft: "auto" }}
-              onClick={(e) =>
-                todoDispatch({ type: types.EDIT, payload: e.target.value })
-              }
-            >
-              <FiEdit />
-            </button>
-            <button
-              style={{ color: "red" }}
-              onClick={() =>
-                todoDispatch({ type: types.DELETE, payload: task.id })
-              }
-            >
-              <FiDelete />
-            </button>
-          </li>
+          <DisplayField task={task} todoDispatch={todoDispatch} types={types} />
         ))}
       </ul>
     </>
