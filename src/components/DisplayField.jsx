@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { FiDelete, FiEdit } from "react-icons/fi";
+import { GiCancel } from "react-icons/gi";
+import { FaRegSave } from "react-icons/fa";
 
 function DisplayField({ task, todoDispatch, types }) {
   const [editing, setEditing] = useState(false);
+  const editInput = useRef();
   return (
     <li
       key={task.id}
@@ -36,9 +39,7 @@ function DisplayField({ task, todoDispatch, types }) {
 
           <button
             style={{ marginLeft: "auto" }}
-            onClick={(e) =>
-              todoDispatch({ type: types.EDIT, payload: e.target.value })
-            }
+            onClick={() => setEditing((prevState) => !prevState)}
           >
             <FiEdit />
           </button>
@@ -52,7 +53,36 @@ function DisplayField({ task, todoDispatch, types }) {
           </button>
         </>
       ) : (
-        <></>
+        <>
+          <input
+            type="text"
+            placeholder={task.title}
+            style={{ width: "100%" }}
+            ref={editInput}
+          />
+          <button
+            style={{ color: "red" }}
+            onClick={() => setEditing((prevState) => !prevState)}
+          >
+            <GiCancel />
+          </button>
+          <button
+            style={{ color: "green" }}
+            onClick={() => {
+              if (editInput.current.value) {
+                todoDispatch({
+                  type: types.EDIT,
+                  payload: { id: task.id, text: editInput.current.value },
+                });
+                setEditing((prevState) => !prevState);
+              } else {
+                return;
+              }
+            }}
+          >
+            <FaRegSave />
+          </button>
+        </>
       )}
     </li>
   );
